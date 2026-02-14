@@ -29,7 +29,7 @@ export default function Home() {
       timestamp: Date.now()
     }
 
-    const saved = await createProject({ item: newItem, visibility: 'private' })
+    const saved = await createProject({ item: newItem })
 
     const finalItem = saved || newItem
 
@@ -106,7 +106,7 @@ export default function Home() {
           </div>
 
           <div className="projects-grid">
-            {projects.map(({ id, name, renderedImage, sourceImage, timestamp }) => (
+            {projects.map(({ id, name, renderedImage, sourceImage, timestamp, isPublic }) => (
               <div key={id} className="project-card group">
                 <div className="preview">
                   <img
@@ -114,9 +114,11 @@ export default function Home() {
                     alt={name || "project"}
                   />
 
-                  <div className="badge">
-                    <span>Community</span>
-                  </div>
+                  {isPublic && (
+                    <div className="badge">
+                      <span>Community</span>
+                    </div>
+                  )}
                 </div>
 
                 <div className="card-body">

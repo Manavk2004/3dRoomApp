@@ -1,15 +1,36 @@
+import puter from '@heyputer/puter.js'
 import React, { useEffect, useState } from 'react'
-import { useLocation } from 'react-router'
+import { useLocation, useParams } from 'react-router'
 
 const Visualizer = () => {
     const location = useLocation()
+    const { id } = useParams()
     const [state, setState] = useState<{ initialImage?: string; name?: string }>({})
 
     useEffect(() => {
         if (location.state) {
             setState(location.state)
+            return
         }
-    }, [location.state])
+
+        if (!id) return
+
+        const loadProject = async () => {
+            try {
+                const project = await puter.kv.get(`project:${id}`) as DesignItem | null
+                if (project) {
+                    setState({
+                        initialImage: project.sourceImage,
+                        name: project.name || undefined,
+                    })
+                }
+            } catch (e) {
+                console.warn('Failed to load project:', e)
+            }
+        }
+
+        loadProject()
+    }, [id, location.state])
 
     const { initialImage, name } = state;
 

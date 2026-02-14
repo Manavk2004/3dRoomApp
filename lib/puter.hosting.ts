@@ -51,7 +51,11 @@ export const uploadImageToHosting = async ({ hosting, url, projectId, label }: S
         await puter.fs.write(filePath, uploadFile)
 
         const hostedUrl = getHostedUrl(hosting, `${relativeDir}/${label}.${ext}`)
-        return hostedUrl ? { url: hostedUrl } : { url: filePath };
+        if (!hostedUrl) {
+            console.warn(`Failed to resolve hosted URL for ${filePath}`);
+            return null;
+        }
+        return { url: hostedUrl };
     }catch (e){
         console.warn(`Failed to store hosted image: ${e}`);
         return null

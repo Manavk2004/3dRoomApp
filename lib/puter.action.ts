@@ -4,7 +4,7 @@ import { isHostedUrl } from "./utils";
 
 export const signIn = async () => await puter.auth.signIn();
 
-export const signOut = async () => puter.auth.signOut();
+export const signOut = async () => await puter.auth.signOut();
 
 export const getCurrentUser = async () => {
     try {
@@ -51,6 +51,7 @@ export const createProject = async ({ item }: CreateProjectParams ): Promise<Des
     
 
     try{
+        await puter.kv.set(`project:${projectId}`, payload)
         return payload
     }catch(e){
         console.log("Failed to save project", e)
